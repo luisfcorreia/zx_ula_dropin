@@ -1,0 +1,26 @@
+set -tmpdir "/tmp"
+set -xsthdpdir "xst"
+run
+-ifn ula_zx48k.prj
+-ifmt mixed
+-ofn ula_zx48k
+-ofmt NGC
+-p xc95144xl-10-tq100
+-top ula_zx48k
+-opt_mode Speed
+-opt_level 1
+-iuc NO
+-keep_hierarchy No
+-netlist_hierarchy As_Optimized
+-rtlview Yes
+-hierarchy_separator /
+-bus_delimiter <>
+-case Maintain
+-verilog2001 YES
+-fsm_extract YES
+-fsm_encoding Auto
+-safe_implementation No
+-mux_extract Yes
+-resource_sharing YES
+-iobuf YES
+-equivalent_register_removal YES

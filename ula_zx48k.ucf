@@ -1,0 +1,108 @@
+# ===========================================================================
+# ZX 48K ULA - Pin Constraints
+# Target: Xilinx XC95144XL-TQ100
+# ===========================================================================
+NET "q"  LOC = "P22";
+NET "q"  BUFG = CLK;
+
+# ===========================================================================
+# Clock Outputs (2 pins)
+# ===========================================================================
+NET "clock" LOC = "P23";
+
+# ===========================================================================
+# Z80 CPU INTERFACE
+# ===========================================================================
+NET "wr_n"  LOC = "P87";
+NET "rd_n"  LOC = "P89";
+NET "mreq_n"  LOC = "P90";
+NET "io_ula_n"  LOC = "P91";
+NET "a14"  LOC = "P92";
+NET "a15"  LOC = "P93";
+NET "int_n"  LOC = "P94";
+
+# ===========================================================================
+# DATA INTERFACE (shared: Z80 + DRAM + ULA)
+# ULA drives only during ULA port reads; tri-stated otherwise.
+# ===========================================================================
+NET "d[0]" LOC = "P11";
+NET "d[1]" LOC = "P12";
+NET "d[2]" LOC = "P13";
+NET "d[3]" LOC = "P14";
+NET "d[4]" LOC = "P15";
+NET "d[5]" LOC = "P16";
+NET "d[6]" LOC = "P17";
+NET "d[7]" LOC = "P18";
+
+NET "a[0]" LOC = "P24";
+NET "a[1]" LOC = "P25";
+NET "a[2]" LOC = "P28";
+NET "a[3]" LOC = "P29";
+NET "a[4]" LOC = "P30";
+NET "a[5]" LOC = "P32";
+NET "a[6]" LOC = "P33";
+
+NET "ras_n" LOC = "P36";
+NET "cas_n" LOC = "P37";
+NET "we_n" LOC = "P39";
+
+# ===========================================================================
+# ROM CHIP SELECT (ULA output)
+# /ROM CS: active when 0x0000–0x3FFF accessed
+# ===========================================================================
+NET "rom_cs_n" LOC = "P40";
+
+# ===========================================================================
+# SOUND (bidirectional, single pin 28)
+# Output: MIC (d[5]) and SPK (d[4]) from port 0xFE writes.
+# Input:  EAR — tape load signal, returned on D6 during port 0xFE reads.
+# ===========================================================================
+NET "sound" LOC = "P41";
+
+# ===========================================================================
+# VIDEO — 4-bit DAC outputs (R-2R resistor ladder on PCB)
+#
+# Each signal needs 4 CPLD output pins.  Build an R-2R ladder per signal:
+#   bit3 (MSB) → 1kΩ series → node;  2kΩ to GND
+#   bit2       → 1kΩ series → node;  2kΩ to GND
+#   bit1       → 1kΩ series → node;  2kΩ to GND
+#   bit0 (LSB) → 1kΩ series → node;  2kΩ to GND (final termination)
+#   node       → 75Ω series → coax output
+#
+# /Y (yn): inverted luma + sync.  15 = sync tip, 11 = black, 0 = peak white
+# U  (uo): Cb chroma.  8 = neutral, 14 = max blue, 2 = max yellow
+# V  (vo): Cr chroma.  8 = neutral, 14 = max red,  2 = max cyan
+#
+# IMPORTANT: verify pin assignments against XC95144XL-TQ100 package diagram.
+# Pins P43–P46 and P49–P56 are used here; adjust if conflicts exist.
+# ===========================================================================
+NET "yn[3]" LOC = "P81";   # /Y MSB  (was y_n single bit)
+NET "yn[2]" LOC = "P82";
+NET "yn[1]" LOC = "P85";
+NET "yn[0]" LOC = "P86";   # /Y LSB
+
+NET "uo[3]" LOC = "P50";   # U MSB
+NET "uo[2]" LOC = "P52";
+NET "uo[1]" LOC = "P53";
+NET "uo[0]" LOC = "P54";   # U LSB
+
+NET "vo[3]" LOC = "P74";   # V MSB
+NET "vo[2]" LOC = "P76";
+NET "vo[1]" LOC = "P77";
+NET "vo[0]" LOC = "P78";   # V LSB
+
+# VIDEO RGBi bonus outputs — route to spare CPLD pins / PCB test pads
+NET "r"      LOC = "P63";
+NET "g"      LOC = "P64";
+NET "b"      LOC = "P65";
+NET "bright" LOC = "P66";
+
+# ===========================================================================
+# KEYBOARD COLUMNS (inputs from matrix)
+# Pins 19,20,23,24,26 — T0–T4 returned on D0–D4 during port 0xFE reads.
+# ===========================================================================
+NET "t[0]" LOC = "P67";
+NET "t[1]" LOC = "P68";
+NET "t[2]" LOC = "P70";
+NET "t[3]" LOC = "P71";
+NET "t[4]" LOC = "P72";
